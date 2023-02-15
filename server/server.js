@@ -28,7 +28,6 @@ const init = require('./config/db_manager');
 const resolvers = {
     Query: {
         employeeList(parent, args, contextValue, info) {
-            console.log("hola");
             console.log(args);
 
             return employeeList(args);
@@ -47,7 +46,7 @@ const server = new ApolloServer({
 // Express
 const express = require('express');
 const app = express();
-const port = 3002;
+const port = 3000;
 app.use(express.static('public'));
 
 // Session
@@ -82,7 +81,7 @@ init().then(r => {
     console.log(e);
 });
 
-const graphQlPort = 4002;
+const graphQlPort = 4000;
 server.start().then(() => {
     server.applyMiddleware({app, path: '/graphql'});
     app.listen({port: graphQlPort}, () =>

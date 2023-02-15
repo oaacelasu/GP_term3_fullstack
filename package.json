@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "compile": "babel src --out-dir public",
-    "start": "nodemon -w server server/server.js",
+    "server": "nodemon -w server server/server.js",
     "watch": "babel src --out-dir public --watch --verbose"
   },
   "keywords": [],
