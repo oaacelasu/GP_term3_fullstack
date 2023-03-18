@@ -1,30 +1,35 @@
 import React from "react";
+import {Link, Route, Routes} from "react-router-dom";
+import {getParam, buildQuery} from "./Utils.jsx";
+
+const DashboardLinks = (query) => <ul>
+    <li><Link to={{ pathname: '/search', search: `?${query}` }}>Search</Link></li>
+    <li><Link to={`/create`}>Create</Link></li>
+</ul>;
+const CreateLinks = (query) => <ul>
+    <li><Link to={{ pathname: '/dashboard', search: `?${query}` }}>Dashboard</Link></li>
+</ul>;
+const SearchLinks = (query) => CreateLinks(query);
 
 class AppHeader extends React.Component {
 
-    getActions() {
-        console.log(this.props.currentRoute);
-        if (this.props.currentRoute === 'dashboard') {
-            return <ul>
-                <li><a href={"#"} onClick={() => this.props.onActionClicked("search")} role={"button"}>Search</a></li>
-                <li><a href={"#"} onClick={() => this.props.onActionClicked("create")} role={"button"}>Create</a></li>
-            </ul>
-        } else {
-            return <ul>
-                <li><a href={"#"} onClick={() => this.props.onActionClicked("dashboard")} role={"button"}>Dashboard</a>
-                </li>
-            </ul>
-        }
+    constructor(props) {
+        super(props);
+        this.searchQuery = props.searchParams
     }
 
     render() {
         return <header className="container">
             <nav>
-                <h1 style={{marginTop: "15px"}}>EMS Manager</h1>
-                {this.getActions()}
+                <h1 style={{marginTop: "15px"}}>EMSs Manager</h1>
+                <Routes>
+                    <Route path="/dashboard" element={DashboardLinks(buildQuery(this.searchQuery))}/>
+                    <Route path="/create" element={CreateLinks(buildQuery(this.searchQuery))}/>
+                    <Route path="/search" element={SearchLinks(buildQuery(this.searchQuery))}/>
+                </Routes>
             </nav>
         </header>;
     }
 }
 
-export default AppHeader;
+export default getParam(AppHeader);

@@ -42,9 +42,16 @@ const resolvers = {
 
             return employeeList(args);
         },
+        employee(parent, args, contextValue, info) {
+            console.log(args);
+
+            return employee(args);
+        }
     },
     Mutation: {
         employeeAdd,
+        employeeUpdate,
+        employeeDelete
     }
 }
 
@@ -58,17 +65,21 @@ const express = require('express');
 const app = express();
 
 init(url).then(r => {
-    server.start().then(() => {
-        server.applyMiddleware({ app, path: '/graphql', cors: enableCors });
-        app.listen({port: port}, () =>
-            console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`));
-    });
+        server.start().then(() => {
+            server.applyMiddleware({app, path: '/graphql', cors: enableCors});
+            app.listen({port: port}, () =>
+                console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`));
+        });
     }
 ).catch(e => {
     console.log(e);
 });
 
-async function employeeList(args){
+async function employee(args) {
+    return await userModel.findById(args.id);
+}
+
+async function employeeList(args) {
     const {
         firstName,
         lastName,
@@ -76,8 +87,8 @@ async function employeeList(args){
         dateOfJoining,
         title,
         department,
-        employeeType
-
+        employeeType,
+        currentStatus
     } = args;
 
     const query = {};
@@ -109,6 +120,10 @@ async function employeeList(args){
         query.employeeType = employeeType;
     }
 
+    if (currentStatus) {
+        query.currentStatus = currentStatus;
+    }
+
     return await userModel.find(query);
 }
 
@@ -122,4 +137,18 @@ async function employeeAdd(_, {employee}) {
         }
     });
     return newEmployee;
+}
+
+async function employeeDelete(_, {id}) {
+    await userModel.findByIdAndDelete(id);
+    return {id};
+}
+
+async function employeeUpdate(_, {id, employee}) {
+    const newEmployee = {...employee};
+    const user = await userModel.findByIdAndUpdate(
+        id,
+        newEmployee,
+    );
+    await user
 }

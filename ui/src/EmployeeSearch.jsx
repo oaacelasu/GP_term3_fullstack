@@ -1,14 +1,30 @@
 import React from "react";
+import {getParam, buildQuery} from "./Utils.jsx";
+import {Link} from "react-router-dom";
+
+const SearchLinks = (data) => <nav>
+    <h1 style={{marginTop: "15px"}}>Search</h1>
+    <ul>
+        <li><Link to={{pathname: '/dashboard', search: `?${data.query}`}}>Dashboard</Link></li>
+    </ul>
+</nav>
+
 
 class EmployeeSearch extends React.Component {
+
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeEmployeeType = this.handleChangeEmployeeType.bind(this);
         this.handleChangeDepartment = this.handleChangeDepartment.bind(this);
         this.handleChangeTitle = this.handleChangeTitle.bind(this);
-        this.state = {
-            filters: this.props.filters
+        this.searchQuery = new Map(props.searchParams);
+       this.state = {
+            filters: {
+                department: props.searchParams.get("department") || null,
+                title: props.searchParams.get("title") || null,
+                employeeType: props.searchParams.get("employeeType") || null
+            }
         }
     }
 
@@ -34,7 +50,8 @@ class EmployeeSearch extends React.Component {
             filters.title = data.title;
         }
 
-        this.props.onSubmit(filters);
+
+        this.props.navigate('/dashboard?' + buildQuery(new Map(Object.entries(filters))));
     }
 
     handleChangeEmployeeType(event) {
@@ -66,6 +83,7 @@ class EmployeeSearch extends React.Component {
 
     render() {
         return <div className="container">
+            <SearchLinks query={buildQuery(this.searchQuery)}/>
             <section className="row">
                 <div className="col-md-12">
                     <h3>Search</h3>
@@ -113,4 +131,4 @@ class EmployeeSearch extends React.Component {
     }
 }
 
-export default EmployeeSearch;
+export default getParam(EmployeeSearch);

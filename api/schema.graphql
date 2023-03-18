@@ -30,6 +30,7 @@ input EmployeeInputs {
     title: Title!
     department: Department!
     employeeType: EmployeeType!
+    currentStatus: Boolean!
 }
 
 type Employee {
@@ -41,6 +42,7 @@ type Employee {
     title: Title!
     department: Department!
     employeeType: EmployeeType!
+    currentStatus: Boolean!
 }
 
 type Query {
@@ -51,10 +53,15 @@ type Query {
         dateOfJoining: GraphQLDate,
         title: Title,
         department: Department,
-        employeeType: EmployeeType
+        employeeType: EmployeeType,
+        currentStatus: Boolean,
     ): [Employee!]!
+
+    employee(id: String!): Employee!
 }
 
 type Mutation {
     employeeAdd(employee: EmployeeInputs!): Employee!
+    employeeUpdate(id: String!, employee: EmployeeInputs!): Employee!
+    employeeDelete(id: String!): Employee!
 }

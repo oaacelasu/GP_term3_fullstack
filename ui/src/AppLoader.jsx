@@ -1,6 +1,6 @@
 import React from "react";
 
-class AppLoader extends React.Component {
+export default class AppLoader extends React.Component {
     render() {
         if (!this.props.isLoading) {
             //return dive with the same size as the progress bar
@@ -12,5 +12,3 @@ class AppLoader extends React.Component {
         </div>;
     }
 }
-
-export default AppLoader;

@@ -29,6 +29,10 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
+    currentStatus: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const model = new mongoose.model('employee', UserSchema);

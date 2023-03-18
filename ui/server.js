@@ -28,10 +28,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // Routes
 const router = require('./routes.js');
-app.use('/', router);
+app.use('/#/dashboard/', router);
 
 
 // Start Server
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Example app listening at http://localhost:${port}/#/dashboard/`)
 });

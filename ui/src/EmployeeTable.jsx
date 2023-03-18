@@ -1,6 +1,16 @@
 import React from "react";
+import {getParam} from "./Utils.jsx";
+import {Link} from "react-router-dom";
+
 
 class EmployeeTable extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.onEdit = this.onEdit.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+    }
+
     getPrettyDate(date) {
         const d = new Date(date);
         return d.toLocaleDateString();
@@ -8,6 +18,15 @@ class EmployeeTable extends React.Component {
 
     getPrettyId(id) {
         return id.substring(0, 8);
+    }
+
+    onEdit(id) {
+        this.props.navigate(`/edit/${id}`);
+    }
+
+    onDelete(id) {
+        event.preventDefault();
+        this.props.deleteEmployee(id);
     }
 
     render() {
@@ -26,6 +45,7 @@ class EmployeeTable extends React.Component {
                             <th scope="col">Title</th>
                             <th scope="col">Date of Joining</th>
                             <th scope="col">Age</th>
+                            <th scope="col">Actions</th>
 
                         </tr>
                         </thead>
@@ -41,6 +61,11 @@ class EmployeeTable extends React.Component {
                                     <td>{employee.title}</td>
                                     <td>{this.getPrettyDate(employee.dateOfJoining)}</td>
                                     <td>{employee.age}</td>
+                                    <td>
+                                        <Link to={`/edit/${employee.id}`}>Edit</Link>
+                                        <br/>
+                                        <a href="#" onClick={() => this.onDelete(employee.id)}>Delete</a>
+                                    </td>
                                 </tr>
                             )
                         }
@@ -52,4 +77,4 @@ class EmployeeTable extends React.Component {
     }
 }
 
-export default EmployeeTable;
+export default getParam(EmployeeTable)
