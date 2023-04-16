@@ -45,6 +45,7 @@ class EmployeeTable extends React.Component {
                             <th scope="col">Title</th>
                             <th scope="col">Date of Joining</th>
                             <th scope="col">Age</th>
+                            <th scope="col">Retirement</th>
                             <th scope="col">Actions</th>
 
                         </tr>
@@ -60,7 +61,9 @@ class EmployeeTable extends React.Component {
                                     <td>{employee.department}</td>
                                     <td>{employee.title}</td>
                                     <td>{this.getPrettyDate(employee.dateOfJoining)}</td>
+
                                     <td>{employee.age}</td>
+                                    <td>{this.getPrettyDate(employee.dateOfRetirement)}</td>
                                     <td>
                                         <Link to={`/edit/${employee.id}`}>Edit</Link>
                                         <br/>

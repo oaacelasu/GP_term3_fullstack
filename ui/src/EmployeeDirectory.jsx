@@ -15,13 +15,14 @@ import 'whatwg-fetch';
 import React from 'react';
 import EmployeeTable from "./EmployeeTable.jsx";
 import AppLoader from "./AppLoader.jsx";
-import {DELETE_EMPLOYEE, GET_EMPLOYEES, NEW_EMPLOYEE} from "./graphql";
+import {DELETE_EMPLOYEE, GET_EMPLOYEES} from "./graphql";
 import {buildQuery, getParam} from "./Utils.jsx";
 
 const DashboardLinks = (data) => <nav>
     <h1 style={{marginTop: "15px"}}>EMS Manager</h1>
     <ul>
         <li><Link to={{pathname: '/search', search: `?${data.query}`}}>Search</Link></li>
+        <li><Link to={`/upcoming-retirement`}>Upcoming_Retirement</Link></li>
         <li><Link to={`/create`}>Create</Link></li>
     </ul>
 </nav>
@@ -77,6 +78,17 @@ class EmployeeDirectory extends React.Component {
             loading: true,
             error: null,
         })
+
+        const employee = this.state.employees.find(e => e.id === id);
+        if (employee.currentStatus) {
+            this.setState({
+                loading: false,
+                error: {
+                    message: "Cannot delete an employee that is currently active"
+                },
+            })
+            return;
+        }
 
         let data = {
             id: id

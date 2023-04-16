@@ -36,6 +36,20 @@ class EmployeeForm extends React.Component {
         }
     }
 
+    calculateAge(birthDate) {
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const month = today.getMonth() - birthDate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    getDateFromISO8601(isostr) {
+        return isostr?new Date(isostr).toISOString().substr(0, 10):''
+    }
+
     handleSubmit(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -53,17 +67,18 @@ class EmployeeForm extends React.Component {
         }
 
         //validate age is selected
-        if (data.age === "") {
-            errors.push({message: "Age must be selected"});
+        if (data.dateOfBirth === "") {
+            errors.push({message: "Date of birth must be selected"});
         }
 
-        //validate age is numeric
-        if (isNaN(parseInt(data.age))) {
-            errors.push({message: "Age must be numeric"});
-        }
+        // Calculate the age based on the current date
+        const birthDate = new Date(data.dateOfBirth);
 
-        //validate age is between 20 and 70
-        if (parseInt(data.age) < 20 || parseInt(data.age) > 70) {
+        // Calculate the current age and date of retirement
+        const age = this.calculateAge(birthDate);
+        const dateOfRetirement = new Date(birthDate.setFullYear(birthDate.getFullYear() + 65));
+
+        if (age < 20 || age > 70) {
             errors.push({message: "Age must be between 20 and 70"});
         }
 
@@ -86,12 +101,12 @@ class EmployeeForm extends React.Component {
             return;
         }
 
-        console.log("currentStatus: " + data.currentStatus);
-
         const employee = {
             firstName: data.firstName,
             lastName: data.lastName,
-            age: data.age,
+            dateOfBirth: birthDate,
+            dateOfRetirement: dateOfRetirement,
+            age: age,
             employeeType: data.employeeType,
             department: data.department,
             title: data.title,
@@ -193,9 +208,11 @@ class EmployeeForm extends React.Component {
         if (this.employeeId) {
             return <div>
                 <h3>Edit Employee</h3>
+                {this.state.employee?.id != null &&
                 <p>
                     Employee ID: {this.state.employee?.id || 'Loading...'}
                 </p>
+                }
             </div>
         }
         return <div>
@@ -274,15 +291,26 @@ class EmployeeForm extends React.Component {
                         </div>
 
                         <div className="grid">
-                            <div>
+                            {this.employeeId && <div>
                                 <label htmlFor="age" className="placeholder">Age</label>
                                 <input type="text" className="input" id="age" name="age"
                                        defaultValue={this.state.employee?.age || ''}
                                        readOnly={!!this.state.employee?.age}
-
                                        required/>
-                            </div>
+                            </div>}
 
+                            <div>
+                                <label htmlFor="dateOfBirth" className="placeholder">Date of Birth</label>
+                                <input
+                                    type="date"
+                                    className="input"
+                                    id="dateOfBirth"
+                                    name="dateOfBirth"
+                                    defaultValue={this.getDateFromISO8601(this.state.employee?.dateOfBirth)}
+                                    readOnly={!!this.state.employee?.dateOfBirth}
+                                    required
+                                />
+                            </div>
 
                             {
                                 this.state.employee?.employeeType ?

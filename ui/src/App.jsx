@@ -16,6 +16,7 @@ import {HashRouter as Router, Route, Routes} from 'react-router-dom'
 import EmployeeDirectory from "./EmployeeDirectory.jsx";
 import EmployeeForm from "./EmployeeForm.jsx";
 import EmployeeSearch from "./EmployeeSearch.jsx";
+import EmployeesToRetire from "./EmployeesToRetire.jsx";
 
 
 const NotFound = () => <h1>404.. This page is not found!</h1>;
@@ -26,6 +27,7 @@ const App = () => {
             <Router>
                 <Routes>
                     <Route path="/dashboard" element={<EmployeeDirectory/>}/>
+                    <Route path="/upcoming-retirement" element={<EmployeesToRetire/>}/>
                     <Route path="/search" element={<EmployeeSearch/>}/>
                     <Route exact path="/create" element={<EmployeeForm/>}/>
                     <Route path="/edit/:id" element={<EmployeeForm/>}/>

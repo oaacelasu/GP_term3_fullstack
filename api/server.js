@@ -46,6 +46,9 @@ const resolvers = {
             console.log(args);
 
             return employee(args);
+        },
+        upcomingRetirements(parent, args, contextValue, info) {
+            return upcomingRetirements();
         }
     },
     Mutation: {
@@ -83,6 +86,7 @@ async function employeeList(args) {
     const {
         firstName,
         lastName,
+        dateOfBirth,
         age,
         dateOfJoining,
         title,
@@ -98,6 +102,10 @@ async function employeeList(args) {
 
     if (lastName) {
         query.lastName = lastName;
+    }
+
+    if(dateOfBirth) {
+        query.dateOfBirth = dateOfBirth;
     }
 
     if (age) {
@@ -125,6 +133,15 @@ async function employeeList(args) {
     }
 
     return await userModel.find(query);
+}
+
+async function upcomingRetirements() {
+    return await userModel.find({
+        dateOfRetirement: {
+            $gte: new Date(),
+            $lte: new Date(new Date().setMonth(new Date().getMonth() + 6))
+        }
+    }).sort({ dateOfRetirement: 1 })
 }
 
 async function employeeAdd(_, {employee}) {

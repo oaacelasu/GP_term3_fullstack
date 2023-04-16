@@ -10,6 +10,12 @@ const UserSchema = new Schema({
         type: String,
         default: ''
     },
+    dateOfBirth: {
+        type: Date,
+    },
+    dateOfRetirement: {
+        type: Date,
+    },
     age: {
         type: Number,
         default: 0
